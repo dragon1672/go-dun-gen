@@ -1,3 +1,7 @@
+github.com/google/go-cmp v0.5.8 h1:e6P7q2lk1O+qJJb4BtCQXlK8vWEO8V1ZeuEdJNOqZyg=
+github.com/google/go-cmp v0.5.8/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
+github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/sethvargo/go-diceware v0.3.0 h1:UVVEfmN/uF50JfWAN7nbY6CiAlp5xeSx+5U0lWKkMCQ=
 github.com/sethvargo/go-diceware v0.3.0/go.mod h1:lH5Q/oSPMivseNdhMERAC7Ti5oOPqsaVddU1BcN1CY0=
 golang.org/x/exp v0.0.0-20231226003508-02704c960a9b h1:kLiC65FbiHWFAOu+lxwNPujcsl8VYyTYYEZnsOO1WK4=
