@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"golang.org/x/exp/slices"
 	"hash/fnv"
 	"strings"
 
@@ -24,12 +25,7 @@ func Start[T Direction](rawSeed string) *Room[T] {
 }
 
 func (r *Room[T]) Moves() []T {
-	if r.moves == nil {
-		return nil
-	}
-	ret := make([]T, len(r.moves))
-	copy(ret, r.moves)
-	return ret
+	return slices.Clone(r.moves)
 }
 
 func (r *Room[T]) LastMove() (T, bool) {
