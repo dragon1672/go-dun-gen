@@ -81,8 +81,12 @@ func (d *Dungeon) ValidMoves() []Direction {
 		validMoves = append(validMoves, lastMove.Reverse())
 	}
 	r := d.room.GetRand()
+	// Stats for room weight
+	//  8 generates around 1000 rooms
+	// 10 generates around 500 rooms
+	// 15 generates around 150 rooms
+	roomChance := 100 - int(math.Min(80, float64(d.room.RoomDepth())*15))
 	// Generate directions in random order
-	roomChance := 100 - int(math.Min(80, float64(d.room.RoomDepth())*3))
 	for _, roomIndex := range r.Perm(4) {
 		move := directionFromIndex(roomIndex)
 		if lastMove, ok := d.room.LastMove(); (!ok || move != lastMove.Reverse()) && r.Intn(100) < roomChance {
