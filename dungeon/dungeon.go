@@ -3,12 +3,12 @@ package dungeon
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/dragon1672/go-dun-gen/generator"
 	"log"
 	"math"
 	"sort"
 	"strings"
 
-	"github.com/dragon1672/go-dun-gen/game/generator"
 	"github.com/sethvargo/go-diceware/diceware"
 	"golang.org/x/exp/slices"
 )
