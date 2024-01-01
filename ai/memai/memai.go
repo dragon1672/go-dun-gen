@@ -1,6 +1,7 @@
 package memai
 
 import (
+	"fmt"
 	"github.com/dragon1672/go-dun-gen/dungeon"
 	"golang.org/x/exp/rand"
 	"golang.org/x/exp/slices"
@@ -9,7 +10,6 @@ import (
 type MemAi struct {
 	d             *dungeon.Dungeon
 	roomsAndMoves map[string]map[dungeon.Direction]struct{}
-	lastMove      *dungeon.Direction
 }
 
 func Make(d *dungeon.Dungeon) *MemAi {
@@ -27,7 +27,6 @@ func (m *MemAi) getCurrentRoomLog() map[dungeon.Direction]struct{} {
 }
 
 func (m *MemAi) logAndMove(move dungeon.Direction) error {
-	m.lastMove = &move
 	m.getCurrentRoomLog()[move] = struct{}{}
 	return m.d.Move(move)
 }
@@ -36,7 +35,7 @@ func (m *MemAi) Move() error {
 	possibleMoves := m.d.ValidMoves()
 	// prune already visited rooms
 	possibleMoves = slices.DeleteFunc(possibleMoves, func(d dungeon.Direction) bool {
-		if m.lastMove != nil && d == m.lastMove.Reverse() {
+		if lastMove, ok := m.d.Room().LastMove(); ok && d == lastMove.Reverse() {
 			return true // prune backtracking
 		}
 		if _, ok := m.getCurrentRoomLog()[d]; ok {
@@ -46,10 +45,13 @@ func (m *MemAi) Move() error {
 	})
 
 	// Add backtracking if no new unique rooms to explore
-	if m.lastMove != nil && len(possibleMoves) == 0 {
-		possibleMoves = []dungeon.Direction{m.lastMove.Reverse()}
+	if lastMove, ok := m.d.Room().LastMove(); ok && len(possibleMoves) == 0 {
+		possibleMoves = []dungeon.Direction{lastMove.Reverse()}
 	}
 
+	if len(possibleMoves) == 0 {
+		return fmt.Errorf("out of moves")
+	}
 	move := possibleMoves[rand.Intn(len(possibleMoves))]
 	return m.logAndMove(move)
 }

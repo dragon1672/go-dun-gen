@@ -21,4 +21,5 @@ func RunAi(ai AI, limit int) {
 		}
 		fmt.Printf("%*d - %s\n", pad, i+1, ai.Dungeon().Description())
 	}
+	fmt.Println("Yay!")
 }

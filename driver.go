@@ -8,5 +8,5 @@ import (
 
 func main() {
 	//ai.RunAi(randai.Make(dungeon.EnterTheDungeon("yo ho")), 1000)
-	ai.RunAi(memai.Make(dungeon.EnterTheDungeon("yo ho")), 600)
+	ai.RunAi(memai.Make(dungeon.EnterTheDungeon("yo ho")), 20000)
 }

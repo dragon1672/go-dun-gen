@@ -75,6 +75,10 @@ type Dungeon struct {
 	room *generator.Room[Direction]
 }
 
+func (d *Dungeon) Room() *generator.Room[Direction] {
+	return d.room
+}
+
 func (d *Dungeon) ValidMoves() []Direction {
 	var validMoves []Direction
 	if lastMove, ok := d.room.LastMove(); ok {
@@ -82,10 +86,15 @@ func (d *Dungeon) ValidMoves() []Direction {
 	}
 	r := d.room.GetRand()
 	// Stats for room weight
-	//  8 generates around 1000 rooms
-	// 10 generates around 500 rooms
-	// 15 generates around 150 rooms
-	roomChance := 100 - int(math.Min(80, float64(d.room.RoomDepth())*15))
+	//  6 generates around over 10k rooms
+	//  8 generates around 2708 rooms
+	// 10 generates around 719 rooms
+	// 15 generates around 151 rooms
+	// 20 generates around 66 rooms
+	// 30 generates around 21 rooms
+	// 50 generates around 11 rooms
+	// 100 generates around 6 rooms
+	roomChance := 100 - int(math.Min(95, float64(d.room.RoomDepth())*30))
 	// Generate directions in random order
 	for _, roomIndex := range r.Perm(4) {
 		move := directionFromIndex(roomIndex)
