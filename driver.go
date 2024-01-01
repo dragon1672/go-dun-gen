@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"go-dun-gen/game/dungeon"
+
+	"github.com/dragon1672/go-dun-gen/dungeon"
 	"golang.org/x/exp/rand"
 )
 
