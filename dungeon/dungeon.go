@@ -75,10 +75,6 @@ type Dungeon struct {
 	room *generator.Room[Direction]
 }
 
-func (d *Dungeon) Room() *generator.Room[Direction] {
-	return d.room
-}
-
 func (d *Dungeon) ValidMoves() []Direction {
 	var validMoves []Direction
 	if lastMove, ok := d.room.LastMove(); ok {

@@ -8,8 +8,9 @@ import (
 )
 
 type MemAi struct {
-	d             *dungeon.Dungeon
-	roomsAndMoves map[string]map[dungeon.Direction]struct{}
+	d              *dungeon.Dungeon
+	roomsAndMoves  map[string]map[dungeon.Direction]struct{}
+	pathToEntrance Stack[dungeon.Direction]
 }
 
 func Make(d *dungeon.Dungeon) *MemAi {
@@ -26,7 +27,17 @@ func (m *MemAi) getCurrentRoomLog() map[dungeon.Direction]struct{} {
 	return m.roomsAndMoves[m.d.Name()]
 }
 
-func (m *MemAi) logAndMove(move dungeon.Direction) error {
+func (m *MemAi) logAndMoveForward(move dungeon.Direction) error {
+	m.getCurrentRoomLog()[move] = struct{}{}
+	m.pathToEntrance.Push(move.Reverse())
+	return m.d.Move(move)
+}
+
+func (m *MemAi) logAndMoveBack() error {
+	move, ok := m.pathToEntrance.Pop()
+	if !ok {
+		return fmt.Errorf("out of moves, discovered %d rooms", len(m.roomsAndMoves))
+	}
 	m.getCurrentRoomLog()[move] = struct{}{}
 	return m.d.Move(move)
 }
@@ -35,7 +46,7 @@ func (m *MemAi) Move() error {
 	possibleMoves := m.d.ValidMoves()
 	// prune already visited rooms
 	possibleMoves = slices.DeleteFunc(possibleMoves, func(d dungeon.Direction) bool {
-		if lastMove, ok := m.d.Room().LastMove(); ok && d == lastMove.Reverse() {
+		if lastMove, ok := m.pathToEntrance.Peek(); ok && d == lastMove {
 			return true // prune backtracking
 		}
 		if _, ok := m.getCurrentRoomLog()[d]; ok {
@@ -44,16 +55,11 @@ func (m *MemAi) Move() error {
 		return false // allow unique new rooms
 	})
 
-	// Add backtracking if no new unique rooms to explore
-	if lastMove, ok := m.d.Room().LastMove(); ok && len(possibleMoves) == 0 {
-		possibleMoves = []dungeon.Direction{lastMove.Reverse()}
-	}
-
 	if len(possibleMoves) == 0 {
-		return fmt.Errorf("out of moves")
+		return m.logAndMoveBack() // backtrack if no new rooms to explore
 	}
 	move := possibleMoves[rand.Intn(len(possibleMoves))]
-	return m.logAndMove(move)
+	return m.logAndMoveForward(move)
 }
 
 func (m *MemAi) Dungeon() *dungeon.Dungeon {
